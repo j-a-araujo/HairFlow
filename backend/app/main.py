@@ -1,25 +1,24 @@
 from fastapi import FastAPI
+
+from app.api.users import router as users_router
+
 from app.db.base import Base
 from app.db.session import engine
 
-import app.models.user  
+import app.models.user
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="HairFlow API",
-    version="1.0.0",
-    description="Smart Appointment Management Platform"
+    version="1.0.0"
 )
 
-Base.metadata.create_all(bind=engine)
+app.include_router(users_router)
+
 
 @app.get("/")
 def root():
     return {
         "message": "HairFlow API is running!"
-    }
-
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy"
     }
