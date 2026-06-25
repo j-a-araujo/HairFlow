@@ -1,4 +1,6 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from app.models.user import User
 from app.schemas.user import UserCreate
@@ -9,6 +11,16 @@ class UserService:
 
     @staticmethod
     def create_user(db: Session, user: UserCreate):
+
+        existing_user = db.scalar(
+            select(User).where(User.email == user.email)
+        )
+
+        if existing_user:
+            raise HTTPException(
+                status_code=409,
+                detail="Email already registered."
+            )
 
         db_user = User(
             first_name=user.first_name,
