@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.appointment import Appointment
-from app.schemas.appointment import AppointmentCreate
+from app.schemas.appointment import AppointmentCreate, AppointmentUpdate
 
 
 class AppointmentService:
@@ -71,3 +71,26 @@ class AppointmentService:
         db.delete(appointment)
 
         db.commit()
+    
+    @staticmethod
+    def update_appointment(
+        db: Session,
+        appointment_id: UUID,
+        appointment_data: AppointmentUpdate,
+    ):
+
+        appointment = AppointmentService.get_appointment(
+            db,
+            appointment_id,
+        )
+
+        appointment.customer_id = appointment_data.customer_id
+        appointment.employee_id = appointment_data.employee_id
+        appointment.service_id = appointment_data.service_id
+        appointment.appointment_date = appointment_data.appointment_date
+        appointment.status = appointment_data.status
+
+        db.commit()
+        db.refresh(appointment)
+
+        return appointment

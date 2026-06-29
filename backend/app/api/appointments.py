@@ -73,3 +73,20 @@ def delete_appointment(
     )
 
     return Response(status_code=204)
+
+@router.put(
+    "/{appointment_id}",
+    response_model=AppointmentResponse,
+)
+def update_appointment(
+    appointment_id: UUID,
+    appointment: AppointmentCreate,
+    db: Session = Depends(get_db),
+):
+
+    return AppointmentService.update_appointment(
+        db,
+        appointment_id,
+        appointment,
+    )
+    
