@@ -1,15 +1,5 @@
-import Navbar from "./Navbar";
-
 function Layout({ children }) {
-    return (
-        <>
-            <Navbar />
-
-            <div className="container mt-4">
-                {children}
-            </div>
-        </>
-    );
+    return children;
 }
 
 export default Layout;
