@@ -1,10 +1,9 @@
 import uuid 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
-from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ ="users"
@@ -24,7 +23,10 @@ class User(Base):
     
     role: Mapped[str] = mapped_column(String(20))
     
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    
     appointments = relationship(
-    "Appointment",
-    back_populates="customer",
-)
+        "Appointment",
+        back_populates="customer",
+        )
+    

@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import UUID, select
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
@@ -6,7 +6,7 @@ from app.models.user import User
 from app.schemas.user import UserCreate
 from app.core.security import hash_password
 from app.core.security import verify_password
-
+from sqlalchemy import select 
 
 class UserService:
 
@@ -28,7 +28,7 @@ class UserService:
             last_name=user.last_name,
             email=user.email,
             password_hash=hash_password(user.password),
-            role="client",
+            role=user.role,
         )
 
         db.add(db_user)
@@ -43,7 +43,48 @@ class UserService:
             select(User).where(User.email == email)
         )
 
-        if user is None or not verify_password(password, user.password_hash):
+        if user is None:
             return None
+        if not verify_password(password, user.password_hash):
+            return None
+        if user.status == "pending":
+            raise HTTPException(
+                status_code=403,
+                detail="User account is pending approval."
+            )
+        if user.status == "rejected":
+            raise HTTPException(
+                status_code=403,
+                detail="User account has been rejected."
+            )
         return user
     
+    @staticmethod
+    def get_pending_users(db: Session):
+        return db.scalars(
+            select(User).where(User.status == "pending")
+        ).all()
+        
+    @staticmethod
+    def approve_user(
+        db: Session,
+        user_id: UUID,
+    ):
+
+        user = db.scalar(
+            select(User).where(User.id == user_id)
+        )
+
+        if user is None:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found",
+            )
+
+        user.status = "active"
+
+        db.commit()
+
+        db.refresh(user)
+
+        return user

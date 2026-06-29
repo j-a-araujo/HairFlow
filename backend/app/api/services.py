@@ -7,6 +7,8 @@ from app.services.service_service import ServiceService
 
 from uuid import UUID
 from fastapi import Response
+from sqlalchemy import select
+
 
 router = APIRouter(
     prefix="/services",
@@ -66,3 +68,4 @@ def delete_service(
 ):
     ServiceService.delete_service(db, service_id)
     return Response(status_code=204)    
+
