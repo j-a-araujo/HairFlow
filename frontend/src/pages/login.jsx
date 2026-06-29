@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
 
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const [email, setEmail] = useState("");
-
     const [password, setPassword] = useState("");
-
     const [error, setError] = useState("");
 
     async function handleLogin(event) {
@@ -19,22 +19,38 @@ function Login() {
 
         try {
 
-            const response = await api.post("/users/login", {
-                email,
-                password,
-            });
+            const response = await api.post(
+                "/users/login",
+                {
+                    email,
+                    password,
+                }
+            );
 
-            localStorage.setItem(
-                "token",
+            auth.login(
                 response.data.access_token
             );
 
-            navigate("/dashboard");
+            if (response.data.role === "admin") {
+
+                navigate("/admin");
+
+            } else if (response.data.role === "employee") {
+
+                navigate("/employee");
+
+            } else {
+
+                navigate("/client");
+
+            }
 
         } catch {
 
             setError("Invalid email or password.");
+
         }
+
     }
 
     return (

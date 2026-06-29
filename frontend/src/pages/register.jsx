@@ -43,7 +43,10 @@ function Register() {
 
         } catch {
 
-            setError("Unable to create account.");
+            console.log(error);
+            console.log(error.response);
+            console.log(error.response?.data);
+            setError("Failed to create account");
 
         }
 

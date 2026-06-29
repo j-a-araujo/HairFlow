@@ -2,27 +2,93 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+
 import Employees from "./pages/Employees";
 import Services from "./pages/Services";
 import Appointments from "./pages/Appointments";
+
+import AdminDashboard from "./pages/AdminDashboard";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
 
-                <Route path="/" element={<Login />} />
+                {/* Public Routes */}
 
-                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/"
+                    element={<Login />}
+                />
 
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
 
-                <Route path="/employees" element={<Employees />} />
+                {/* Admin */}
 
-                <Route path="/services" element={<Services />} />
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute>
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
 
-                <Route path="/appointments" element={<Appointments />} />
+                <Route
+                    path="/employees"
+                    element={
+                        <ProtectedRoute>
+                            <Employees />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/services"
+                    element={
+                        <ProtectedRoute>
+                            <Services />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/appointments"
+                    element={
+                        <ProtectedRoute>
+                            <Appointments />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Employee */}
+
+                <Route
+                    path="/employee"
+                    element={
+                        <ProtectedRoute>
+                            <EmployeeDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Client */}
+
+                <Route
+                    path="/client"
+                    element={
+                        <ProtectedRoute>
+                            <ClientDashboard />
+                        </ProtectedRoute>
+                    }
+                />
 
             </Routes>
         </BrowserRouter>

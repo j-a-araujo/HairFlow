@@ -11,6 +11,9 @@ from app.core.auth import create_access_token
 from app.schemas.user import UserLogin, Token
 from uuid import UUID
 
+    
+from app.core.dependencies import get_current_admin
+
 
 router = APIRouter(
     prefix="/users",
@@ -61,6 +64,7 @@ def login(
     return {
         "access_token": token,
         "token_type": "bearer",
+        "role": user.role,
     }
     
 from app.core.dependencies import get_current_user
@@ -75,6 +79,7 @@ def me(
 @router.get("/pending", response_model=list[UserResponse])
 def get_pending_users(
     db: Session = Depends(get_db),
+    current_admin=Depends(get_current_admin),
 ):
     return UserService.get_pending_users(db)
 
@@ -85,9 +90,11 @@ def get_pending_users(
 def approve_user(
     user_id: UUID,
     db: Session = Depends(get_db),
+    current_admin=Depends(get_current_admin),
 ):
 
     return UserService.approve_user(
         db,
         user_id,
     )
+    
