@@ -5,6 +5,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
+from sqlalchemy.orm import relationship
+
 
 class Employee(Base):
 
@@ -31,4 +33,9 @@ class Employee(Base):
     active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
+    )
+    
+    appointments = relationship(
+        "Appointment",
+        back_populates="employee",
     )

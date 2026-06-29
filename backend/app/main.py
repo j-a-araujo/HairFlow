@@ -11,6 +11,9 @@ from app.api.services import router as services_router
 import app.models.service
 from app.api.employees import router as employees_router
 import app.models.employee
+import app.models.appointment
+from app.api.appointments import router as appointments_router
+import app.models.appointment
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +25,7 @@ app = FastAPI(
 app.include_router(users_router)
 app.include_router(services_router)
 app.include_router(employees_router)
+app.include_router(appointments_router)
 @app.get("/")
 def root():
     return {

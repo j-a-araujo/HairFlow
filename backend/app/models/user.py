@@ -4,6 +4,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
+from sqlalchemy.orm import relationship
+
 class User(Base):
     __tablename__ ="users"
     id: Mapped[uuid.UUID] = mapped_column(
@@ -22,3 +24,7 @@ class User(Base):
     
     role: Mapped[str] = mapped_column(String(20))
     
+    appointments = relationship(
+    "Appointment",
+    back_populates="customer",
+)

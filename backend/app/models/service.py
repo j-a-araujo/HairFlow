@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 
+from sqlalchemy.orm import relationship
 
 class Service(Base):
     __tablename__ = "services"
@@ -35,3 +36,9 @@ class Service(Base):
         Boolean,
         default=True,
     )
+    
+    appointments = relationship(
+        "Appointment",
+        back_populates="service",
+    )
+    
