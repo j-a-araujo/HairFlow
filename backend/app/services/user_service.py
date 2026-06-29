@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from app.models.user import User
 from app.schemas.user import UserCreate
 from app.core.security import hash_password
+from app.core.security import verify_password
 
 
 class UserService:
@@ -35,3 +36,14 @@ class UserService:
         db.refresh(db_user)
 
         return db_user
+    
+    @staticmethod
+    def authenticate_user(db: Session, email: str, password: str):
+        user = db.scalar(
+            select(User).where(User.email == email)
+        )
+
+        if user is None or not verify_password(password, user.password_hash):
+            return None
+        return user
+    

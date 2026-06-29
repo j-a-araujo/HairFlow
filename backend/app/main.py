@@ -6,6 +6,9 @@ from app.db.base import Base
 from app.db.session import engine
 
 import app.models.user
+import app.models.service
+from app.api.services import router as services_router
+import app.models.service
 
 Base.metadata.create_all(bind=engine)
 
@@ -15,7 +18,7 @@ app = FastAPI(
 )
 
 app.include_router(users_router)
-
+app.include_router(services_router)
 
 @app.get("/")
 def root():

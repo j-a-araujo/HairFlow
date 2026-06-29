@@ -21,3 +21,15 @@ class UserResponse(BaseModel):
 
 #criou-se 2 schemas o que o cliente envia e o que 
 #devolvemos. sem password. 
+class UserLogin(BaseModel):
+
+    email: EmailStr
+
+    password: str
+
+
+class Token(BaseModel):
+
+    access_token: str
+
+    token_type: str
