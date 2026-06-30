@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import {
     getEmployees,
     createEmployee,
+    deleteEmployee,
 } from "../services/employeeService";
 
 function Employees() {
@@ -73,6 +74,32 @@ function Employees() {
             console.error(error);
         }
     }
+
+    async function handleDelete(employeeId) {
+
+    const confirmed = window.confirm(
+        "Are you sure you want to delete this employee?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        await deleteEmployee(employeeId);
+
+        const data = await getEmployees();
+
+        setEmployees(data);
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
 
     return (
 
@@ -177,6 +204,8 @@ function Employees() {
 
                             <th>Active</th>
 
+                            <th>Actions</th>
+
                         </tr>
 
                     </thead>
@@ -205,6 +234,17 @@ function Employees() {
 
                                 <td>
                                     {employee.active ? "Yes" : "No"}
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDelete(employee.id)}
+                                    >
+                                        Delete
+                                    </button>
+
                                 </td>
 
                             </tr>

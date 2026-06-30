@@ -18,3 +18,10 @@ export async function createEmployee(employee) {
     return response.data;
 
 }
+export async function deleteEmployee(employeeId) {
+
+    await api.delete(
+        `/employees/${employeeId}`
+    );
+
+}
