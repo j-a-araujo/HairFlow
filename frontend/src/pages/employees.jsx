@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import {
     getEmployees,
     createEmployee,
+    updateEmployee,
     deleteEmployee,
 } from "../services/employeeService";
 
@@ -12,56 +13,69 @@ function Employees() {
 
     const [employees, setEmployees] = useState([]);
     const [showForm, setShowForm] = useState(false);
+
     const [form, setForm] = useState({
-
-    first_name: "",
-
-    last_name: "",
-
-    email: "",
-
-    phone: "",
-
-    speciality: "",
-
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        speciality: "",
     });
 
+    const [editingId, setEditingId] = useState(null);
+
     useEffect(() => {
-
-        async function loadEmployees() {
-
-            try {
-
-                const data = await getEmployees();
-
-                setEmployees(data);
-
-            } catch (error) {
-
-                console.error(error);
-
-            }
-
-        }
 
         loadEmployees();
 
     }, []);
 
+    async function loadEmployees() {
+
+        try {
+
+            const data = await getEmployees();
+
+            setEmployees(data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
     function handleChange(event) {
+
         setForm({
             ...form,
             [event.target.name]: event.target.value,
         });
+
     }
 
     async function handleSubmit(event) {
-        
+
         event.preventDefault();
+
         try {
-            await createEmployee(form);
-            const data = await getEmployees();
-            setEmployees(data);
+
+            if (editingId) {
+
+                await updateEmployee(
+                    editingId,
+                    form
+                );
+
+            } else {
+
+                await createEmployee(form);
+
+            }
+
+            await loadEmployees();
+
             setForm({
                 first_name: "",
                 last_name: "",
@@ -69,37 +83,56 @@ function Employees() {
                 phone: "",
                 speciality: "",
             });
+
+            setEditingId(null);
+
             setShowForm(false);
+
         } catch (error) {
+
             console.error(error);
+
         }
+
     }
 
     async function handleDelete(employeeId) {
 
-    const confirmed = window.confirm(
-        "Are you sure you want to delete this employee?"
-    );
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this employee?"
+        );
 
-    if (!confirmed) {
-        return;
-    }
+        if (!confirmed) return;
 
-    try {
+        try {
 
-        await deleteEmployee(employeeId);
+            await deleteEmployee(employeeId);
 
-        const data = await getEmployees();
+            await loadEmployees();
 
-        setEmployees(data);
+        } catch (error) {
 
-    } catch (error) {
+            console.error(error);
 
-        console.error(error);
+        }
 
     }
 
-}
+    function handleEdit(employee) {
+
+        setEditingId(employee.id);
+
+        setForm({
+            first_name: employee.first_name,
+            last_name: employee.last_name,
+            email: employee.email,
+            phone: employee.phone,
+            speciality: employee.speciality,
+        });
+
+        setShowForm(true);
+
+    }
 
     return (
 
@@ -109,9 +142,7 @@ function Employees() {
 
             <div className="container mt-4">
 
-                <h2>
-                    Employees
-                </h2>
+                <h2>Employees</h2>
 
                 <button
                     className="btn btn-primary mb-3"
@@ -119,74 +150,78 @@ function Employees() {
                 >
                     New Employee
                 </button>
-                
+
                 {showForm && (
 
-        <div className="card mb-4">
+                    <div className="card mb-4">
 
-            <div className="card-body">
+                        <div className="card-body">
 
-                <h4 className="mb-3">
-                    New Employee
-                </h4>
+                            <h4 className="mb-3">
 
-                <form onSubmit={handleSubmit}>
+                                {editingId ? "Edit Employee" : "New Employee"}
 
-                    <input
-                        className="form-control mb-3"
-                        placeholder="First Name"
-                        name="first_name"
-                        value={form.first_name}
-                        onChange={handleChange}
-                    />
+                            </h4>
 
-                    <input
-                        className="form-control mb-3"
-                        placeholder="Last Name"
-                        name="last_name"
-                        value={form.last_name}
-                        onChange={handleChange}
-                    />
+                            <form onSubmit={handleSubmit}>
 
-                    <input
-                        className="form-control mb-3"
-                        type="email"
-                        placeholder="Email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                    />
+                                <input
+                                    className="form-control mb-3"
+                                    placeholder="First Name"
+                                    name="first_name"
+                                    value={form.first_name}
+                                    onChange={handleChange}
+                                />
 
-                    <input
-                        className="form-control mb-3"
-                        placeholder="Phone"
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                    />
+                                <input
+                                    className="form-control mb-3"
+                                    placeholder="Last Name"
+                                    name="last_name"
+                                    value={form.last_name}
+                                    onChange={handleChange}
+                                />
 
-                    <input
-                        className="form-control mb-3"
-                        placeholder="Speciality"
-                        name="speciality"
-                        value={form.speciality}
-                        onChange={handleChange}
-                    />
+                                <input
+                                    className="form-control mb-3"
+                                    type="email"
+                                    placeholder="Email"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                />
 
-                    <button
-                        className="btn btn-success"
-                        type="submit"
-                    >
-                        Create Employee
-                    </button>
+                                <input
+                                    className="form-control mb-3"
+                                    placeholder="Phone"
+                                    name="phone"
+                                    value={form.phone}
+                                    onChange={handleChange}
+                                />
 
-                </form>
+                                <input
+                                    className="form-control mb-3"
+                                    placeholder="Speciality"
+                                    name="speciality"
+                                    value={form.speciality}
+                                    onChange={handleChange}
+                                />
 
-            </div>
+                                <button
+                                    className="btn btn-success"
+                                    type="submit"
+                                >
+                                    {editingId
+                                        ? "Update Employee"
+                                        : "Create Employee"}
+                                </button>
 
-        </div>
+                            </form>
 
-    )}
+                        </div>
+
+                    </div>
+
+                )}
 
                 <table className="table table-striped mt-4">
 
@@ -217,29 +252,34 @@ function Employees() {
                             <tr key={employee.id}>
 
                                 <td>
+
                                     {employee.first_name} {employee.last_name}
+
                                 </td>
 
-                                <td>
-                                    {employee.email}
-                                </td>
+                                <td>{employee.email}</td>
+
+                                <td>{employee.phone}</td>
+
+                                <td>{employee.speciality}</td>
 
                                 <td>
-                                    {employee.phone}
-                                </td>
 
-                                <td>
-                                    {employee.speciality}
-                                </td>
-
-                                <td>
                                     {employee.active ? "Yes" : "No"}
+
                                 </td>
 
                                 <td>
 
                                     <button
-                                        className="btn btn-danger"
+                                        className="btn btn-warning btn-sm me-2"
+                                        onClick={() => handleEdit(employee)}
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm"
                                         onClick={() => handleDelete(employee.id)}
                                     >
                                         Delete

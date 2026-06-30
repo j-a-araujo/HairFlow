@@ -25,3 +25,12 @@ export async function deleteEmployee(employeeId) {
     );
 
 }
+
+export async function updateEmployee(employeeId, employee) {
+    
+    const response = await api.put(
+        `/employees/${employeeId}`,
+        employee
+    );
+    return response.data;
+}
