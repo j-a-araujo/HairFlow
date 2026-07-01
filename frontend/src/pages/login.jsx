@@ -28,7 +28,9 @@ function Login() {
             );
 
             auth.login(
-                response.data.access_token
+                response.data.access_token,
+                response.data.role,
+                response.data.user_id
             );
 
             if (response.data.role === "admin") {
@@ -45,9 +47,17 @@ function Login() {
 
             }
 
-        } catch {
+        } catch (error) {
 
-            setError("Invalid email or password.");
+            if (error.response?.status === 403) {
+
+                setError(error.response.data.detail);
+
+            } else {
+
+                setError("Invalid email or password.");
+
+            }
 
         }
 
@@ -96,7 +106,9 @@ function Login() {
                 {error && (
 
                     <div className="alert alert-danger">
+
                         {error}
+
                     </div>
 
                 )}
@@ -117,7 +129,9 @@ function Login() {
                 Don't have an account?
 
                 <Link to="/register">
+
                     {" "}Register
+
                 </Link>
 
             </p>

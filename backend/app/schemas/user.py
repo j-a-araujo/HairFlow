@@ -39,3 +39,5 @@ class Token(BaseModel):
     token_type: str
     
     role:str
+    
+    user_id: UUID

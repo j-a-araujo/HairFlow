@@ -8,22 +8,35 @@ export function AuthProvider({ children }) {
         localStorage.getItem("token")
     );
 
-    function login(token) {
+    const [role, setRole] = useState(
+        localStorage.getItem("role")
+    );
 
-        localStorage.setItem(
-            "token",
-            token
-        );
+    const [userId, setUserId] = useState(
+        localStorage.getItem("userId")
+    );
+
+    function login(token, role, userId) {
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        localStorage.setItem("userId", userId);
 
         setToken(token);
+        setRole(role);
+        setUserId(userId);
 
     }
 
     function logout() {
 
         localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("userId");
 
         setToken(null);
+        setRole(null);
+        setUserId(null);
 
     }
 
@@ -32,6 +45,8 @@ export function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 token,
+                role,
+                userId,
                 login,
                 logout,
             }}

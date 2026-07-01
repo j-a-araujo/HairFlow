@@ -14,8 +14,11 @@ import ClientDashboard from "./pages/ClientDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+
     return (
+
         <BrowserRouter>
+
             <Routes>
 
                 {/* Public Routes */}
@@ -35,7 +38,7 @@ function App() {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute role="admin">
                             <AdminDashboard />
                         </ProtectedRoute>
                     }
@@ -44,7 +47,7 @@ function App() {
                 <Route
                     path="/employees"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute role="admin">
                             <Employees />
                         </ProtectedRoute>
                     }
@@ -53,11 +56,13 @@ function App() {
                 <Route
                     path="/services"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute role="admin">
                             <Services />
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Shared */}
 
                 <Route
                     path="/appointments"
@@ -73,7 +78,7 @@ function App() {
                 <Route
                     path="/employee"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute role="employee">
                             <EmployeeDashboard />
                         </ProtectedRoute>
                     }
@@ -84,15 +89,18 @@ function App() {
                 <Route
                     path="/client"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute role="client">
                             <ClientDashboard />
                         </ProtectedRoute>
                     }
                 />
 
             </Routes>
+
         </BrowserRouter>
+
     );
+
 }
 
 export default App;

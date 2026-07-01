@@ -22,11 +22,43 @@ function Navbar() {
             <div className="container">
 
                 <Link
-                    className="navbar-brand"
-                    to="/dashboard"
+                    className="navbar-brand fw-bold"
+                    to="/admin"
                 >
                     HairFlow
                 </Link>
+
+                <div className="navbar-nav me-auto">
+
+                    <Link
+                        className="nav-link"
+                        to="/admin"
+                    >
+                        Dashboard
+                    </Link>
+
+                    <Link
+                        className="nav-link"
+                        to="/employees"
+                    >
+                        Employees
+                    </Link>
+
+                    <Link
+                        className="nav-link"
+                        to="/services"
+                    >
+                        Services
+                    </Link>
+
+                    <Link
+                        className="nav-link"
+                        to="/appointments"
+                    >
+                        Appointments
+                    </Link>
+
+                </div>
 
                 <button
                     className="btn btn-outline-light"

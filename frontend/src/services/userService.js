@@ -17,3 +17,11 @@ export async function approveUser(userId) {
     return response.data;
 
 }
+
+export async function getClients() {
+
+    const response = await api.get("/users/clients");
+
+    return response.data;
+
+}

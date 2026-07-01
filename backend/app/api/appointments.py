@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.schemas.appointment import (
     AppointmentCreate,
     AppointmentResponse,
+    AppointmentUpdate,
 )
 from app.services.appointment_service import AppointmentService
 

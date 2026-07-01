@@ -65,6 +65,7 @@ def login(
         "access_token": token,
         "token_type": "bearer",
         "role": user.role,
+        "user_id": str(user.id),
     }
     
 from app.core.dependencies import get_current_user
@@ -98,3 +99,12 @@ def approve_user(
         user_id,
     )
     
+@router.get(
+    "/clients",
+    response_model=list[UserResponse],
+)
+def get_clients(
+    db: Session = Depends(get_db),
+):
+
+    return UserService.list_clients(db)

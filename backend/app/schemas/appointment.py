@@ -26,3 +26,17 @@ class AppointmentResponse(AppointmentBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class AppointmentListResponse(BaseModel):
+
+    id: UUID
+
+    customer_name: str
+
+    employee_name: str
+
+    service_name: str
+
+    appointment_date: datetime
+
+    status: str

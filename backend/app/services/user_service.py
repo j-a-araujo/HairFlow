@@ -7,6 +7,7 @@ from app.schemas.user import UserCreate
 from app.core.security import hash_password
 from app.core.security import verify_password
 from sqlalchemy import select 
+from app.models.employee import Employee
 
 class UserService:
 
@@ -65,6 +66,7 @@ class UserService:
             select(User).where(User.status == "pending")
         ).all()
         
+    
     @staticmethod
     def approve_user(
         db: Session,
@@ -83,8 +85,41 @@ class UserService:
 
         user.status = "active"
 
+        if user.role == "employee":
+
+            existing_employee = db.scalar(
+                select(Employee).where(
+                    Employee.email == user.email
+                )
+            )
+
+            if existing_employee is None:
+
+                new_employee = Employee(
+                    first_name=user.first_name,
+                    last_name=user.last_name,
+                    email=user.email,
+                    phone="",
+                    speciality="General",
+                    active=True,
+                )
+
+                db.add(new_employee)
+
         db.commit()
 
         db.refresh(user)
 
         return user
+
+    @staticmethod
+    def list_clients(
+        db: Session,
+    ):
+
+        return db.scalars(
+            select(User).where(
+                User.role == "client",
+                User.status == "active",
+            )
+        ).all()
